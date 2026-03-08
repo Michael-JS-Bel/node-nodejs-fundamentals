@@ -1,10 +1,14 @@
+import { spawn } from 'child_process';
+
 const execCommand = () => {
-  // Write your code here
-  // Take command from CLI argument
-  // Spawn child process
-  // Pipe child stdout/stderr to parent stdout/stderr
-  // Pass environment variables
-  // Exit with same code as child
+  const cmdStr = process.argv[2];
+  if (!cmdStr) process.exit(1);
+  const isWin = process.platform === 'win32';
+  const child = spawn(isWin ? 'cmd' : 'sh', [isWin ? '/c' : '-c', cmdStr], {
+    stdio: 'inherit',
+    env: process.env,
+  });
+  child.on('exit', (code) => process.exit(code ?? 0));
 };
 
 execCommand();
